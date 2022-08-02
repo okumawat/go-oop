@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
-	demo.CompositionDemo()
-	demo.FileDemo()
+	// demo.CompositionDemo()
+	// demo.FileDemo()
+	demo.WebsocketDemo()
 }
