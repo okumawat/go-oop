@@ -19,7 +19,7 @@ func handleHttp(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("error:", err)
 	}
-	fmt.Println("Hello client:", conn.LocalAddr())
+	fmt.Println("Client connected:", conn.LocalAddr())
 	reader(conn)
 }
 
@@ -30,9 +30,9 @@ func reader(conn *websocket.Conn) {
 		if err != nil {
 			return
 		}
-		fmt.Println(string(msg))
+		fmt.Println("Server:" + string(msg))
 
-		conn.WriteMessage(msgType, []byte("Server Received:"+string(msg)))
+		conn.WriteMessage(msgType, msg)
 	}
 }
 
@@ -44,11 +44,19 @@ func Client() {
 	if err != nil {
 		log.Fatal("Error connecting to Websocket Server:", err)
 	}
-	defer conn.Close()
-	conn.WriteMessage(1, []byte("Socket demo first message"))
+	//defer conn.Close()
+	for {
+		var st string
+		fmt.Scanln(&st)
+		if st == "quit" {
+			conn.Close()
+		}
+		conn.WriteMessage(1, []byte(st))
 
-	_, msg, _ := conn.ReadMessage()
-	fmt.Println("Client received:", string(msg))
+		_, msg, _ := conn.ReadMessage()
+		fmt.Println("Client:", string(msg))
+	}
+
 }
 
 func WebsocketDemo() {
